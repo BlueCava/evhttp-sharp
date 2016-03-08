@@ -51,12 +51,14 @@ namespace EvHttpSharp.OwinHost
                     await _app(env);
                     req.Respond((HttpStatusCode) (int) env["owin.ResponseStatusCode"],
                         headers.Where(k => k.Value.Length != 0).ToDictionary(x => x.Key, x => x.Value[0]),
+                        null,
                         response.ToArray());
 
                 }
                 catch (Exception e)
                 {
                     req.Respond(HttpStatusCode.InternalServerError, new Dictionary<string, string>(),
+                        null,
                         Encoding.UTF8.GetBytes(e.ToString()));
                 }
 

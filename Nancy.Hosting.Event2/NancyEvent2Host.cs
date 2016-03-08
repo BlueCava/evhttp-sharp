@@ -66,7 +66,7 @@ namespace Nancy.Hosting.Event2
         {
             if (req.Uri == null)
             {
-                req.Respond(System.Net.HttpStatusCode.BadRequest, new Dictionary<string, string>(), new byte[0]);
+                req.Respond(System.Net.HttpStatusCode.BadRequest, new Dictionary<string, string>(), null, new byte[0]);
                 return;
             }
             ThreadPool.QueueUserWorkItem(_ =>
@@ -119,7 +119,7 @@ namespace Nancy.Hosting.Event2
 
         void DoRespond(EventHttpRequest req, ResponseData resp)
         {
-            req.Respond((System.Net.HttpStatusCode) resp.Code, resp.Headers ?? new Dictionary<string, string>(),
+            req.Respond((System.Net.HttpStatusCode) resp.Code, resp.Headers ?? new Dictionary<string, string>(), null,
                 resp.Data ?? new byte[0]);
         }
 

@@ -47,7 +47,7 @@ namespace Tests
                 using (
                     var server =
                         listener(
-                            r => r.Respond(System.Net.HttpStatusCode.OK, new Dictionary<string, string>(), new byte[0]))
+                            r => r.Respond(System.Net.HttpStatusCode.OK, new Dictionary<string, string>(), null, new byte[0]))
                     )
                 {
                     server.Start("127.0.0.1", _freePort);
@@ -68,7 +68,7 @@ namespace Tests
                 using (
                     var server =
                         listener(
-                            r => r.Respond(System.Net.HttpStatusCode.OK, new Dictionary<string, string>(), new byte[0]))
+                            r => r.Respond(System.Net.HttpStatusCode.OK, new Dictionary<string, string>(), null, new byte[0]))
                     )
                 {
                     server.Start("127.0.0.1", _freePort);
@@ -86,7 +86,7 @@ namespace Tests
                 using (var server = listener(r => ThreadPool.QueueUserWorkItem(_ =>
                 {
                     Thread.Sleep(1000);
-                    r.Respond(HttpStatusCode.OK, new Dictionary<string, string>(), new byte[0]);
+                    r.Respond(HttpStatusCode.OK, new Dictionary<string, string>(), null, new byte[0]);
                 })))
                 {
                     server.Start("127.0.0.1", _freePort);

@@ -56,7 +56,7 @@ namespace EvHttpSharp
         private static readonly Dictionary<HttpStatusCode, string> StatusCodes = Enum.GetValues(typeof (HttpStatusCode))
             .Cast<HttpStatusCode>().Distinct().ToDictionary(x => x, x => x.ToString());
 
-        public void Respond(HttpStatusCode code, IDictionary<string, string> headers,
+        public void Respond(HttpStatusCode code, IDictionary<string, string> headers, IList<string> cookies,
             ArraySegment<byte>[] body)
         {
             var pHeaders = Event.EvHttpRequestGetOutputHeaders(_handle);
@@ -64,6 +64,13 @@ namespace EvHttpSharp
                 if (header.Key != "Content-Length")
                     if (header.Value != null)
                         Event.EvHttpAddHeader(pHeaders, header.Key, header.Value);
+            if (cookies != null)
+            {
+                foreach (var cookie in cookies.Where(cookie => !string.IsNullOrWhiteSpace(cookie)))
+                {
+                    Event.EvHttpAddHeader(pHeaders, "Set-Cookie", cookie);
+                }
+            }
 
             Event.EvHttpAddHeader(pHeaders, "Content-Length", CalculateLength(body).ToString());
             var buffer = Event.EvBufferNew();
@@ -83,15 +90,15 @@ namespace EvHttpSharp
         }
 
 
-        public void Respond(HttpStatusCode code, IDictionary<string, string> headers,
+        public void Respond(HttpStatusCode code, IDictionary<string, string> headers, IList<string> cookies,
             IEnumerable<ArraySegment<byte>> body)
         {
-            Respond(code, headers, body.ToArray());
+            Respond(code, headers, cookies, body.ToArray());
         }
 
-        public void Respond(HttpStatusCode code, IDictionary<string, string> headers, byte[] body)
+        public void Respond(HttpStatusCode code, IDictionary<string, string> headers, IList<string> cookies, byte[] body)
         {
-            Respond(code, headers, new[] {new ArraySegment<byte>(body, 0, body.Length)});
+            Respond(code, headers, cookies, new[] {new ArraySegment<byte>(body, 0, body.Length)});
         }
 
 // ReSharper disable once ParameterTypeCanBeEnumerable.Local
