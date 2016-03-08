@@ -31,7 +31,7 @@ namespace Sandbox
             {
                 new EventHttpMultiworkerListener(
                     req =>
-                        req.Respond(HttpStatusCode.OK, new Dictionary<string, string>(),
+                        req.Respond(HttpStatusCode.OK, new Dictionary<string, string>(), null,
                             Encoding.UTF8.GetBytes("Hello from thread " + Thread.CurrentThread.ManagedThreadId)),
                     workers).Start(
                         args[0], ushort.Parse(args[1]));
